@@ -6,10 +6,13 @@ import static io.restassured.RestAssured.*;
 public class GoogleMapsApiTesting {
 	public static void main(String[] args) {
 		/*
-		 * given - all input details When - submit the API, resource, http method Then -
-		 * validate the response
+		 * given - all input details
+		 * When - submit the API, resource, http method
+		 * Then - validate the response
 		 */
+		//storing base uri
 		RestAssured.baseURI = "https://rahulshettyacademy.com";
+		//giving input, submitting and asserting the status code
 		given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
 				.body("{\r\n" + "  \"location\": {\r\n" + "    \"lat\": -38.383494,\r\n" + "    \"lng\": 33.427362\r\n"
 						+ "  },\r\n" + "  \"accuracy\": 50,\r\n" + "  \"name\": \"Frontline house\",\r\n"
