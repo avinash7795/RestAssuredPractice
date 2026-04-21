@@ -3,7 +3,7 @@ package side.practice.files;
 public class Payload {
 
 	//method to return AddPlace API payload
-	public static String AddPlace() {
+	public static String addPlace() {
 		return "{\r\n"
 				+ "  \"location\": {\r\n"
 				+ "    \"lat\": -38.383494,\r\n"

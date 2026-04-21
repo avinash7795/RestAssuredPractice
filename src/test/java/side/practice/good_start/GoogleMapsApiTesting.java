@@ -16,7 +16,7 @@ public class GoogleMapsApiTesting {
 		RestAssured.baseURI = "https://rahulshettyacademy.com";
 		// giving input, submitting and asserting the status code
 		given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
-				.body(Payload.AddPlace()) //got payload from helper class method
+				.body(Payload.addPlace()) //got payload from helper class method
 				.when().post("/maps/api/place/add/json").then().log().all().assertThat()
 				.statusCode(200).body("scope", equalTo("APP")).header("Server", "Apache/2.4.52 (Ubuntu)");
 	}
