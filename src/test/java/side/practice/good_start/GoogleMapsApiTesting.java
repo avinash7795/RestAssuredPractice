@@ -1,6 +1,7 @@
 package side.practice.good_start;
 
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import side.practice.files.Payload;
 
 import static io.restassured.RestAssured.*;
@@ -14,10 +15,17 @@ public class GoogleMapsApiTesting {
 		 */
 		// storing base uri
 		RestAssured.baseURI = "https://rahulshettyacademy.com";
-		// giving input, submitting and asserting the status code
-		given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
-				.body(Payload.addPlace()) //got payload from helper class method
-				.when().post("/maps/api/place/add/json").then().log().all().assertThat()
-				.statusCode(200).body("scope", equalTo("APP")).header("Server", "Apache/2.4.52 (Ubuntu)");
+		// giving input, submitting and asserting the status code and extracting the response
+		String response = given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
+				.body(Payload.addPlace()) // got payload from helper class method
+				.when().post("/maps/api/place/add/json").then().log().all().assertThat().statusCode(200)
+				.body("scope", equalTo("APP")).header("Server", "Apache/2.4.52 (Ubuntu)").extract().response()
+				.asString();
+		System.out.println(response);
+		// parsing string into json
+		JsonPath js = new JsonPath(response);
+		// extracting place id from json response body
+		String placeId = js.getString("place_id");
+		System.out.println(placeId);
 	}
 }
