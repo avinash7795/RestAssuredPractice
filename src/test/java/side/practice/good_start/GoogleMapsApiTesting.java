@@ -3,9 +3,12 @@ package side.practice.good_start;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import side.practice.files.Payload;
+import side.practice.files.ReusableMethods;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
+
+import org.testng.Assert;
 
 public class GoogleMapsApiTesting {
 	public static void main(String[] args) {
@@ -23,7 +26,7 @@ public class GoogleMapsApiTesting {
 				.asString();
 		System.out.println(response);
 		// parsing string into json
-		JsonPath js = new JsonPath(response);
+		JsonPath js = ReusableMethods.rawToJson(response);
 		// extracting place id from json response body
 		String placeId = js.getString("place_id");
 		System.out.println(placeId);
@@ -42,10 +45,11 @@ public class GoogleMapsApiTesting {
 				.get("maps/api/place/get/json").then().log().all().assertThat().statusCode(200).extract().response()
 				.asString();
 		// parsing string into json format
-		JsonPath js1 = new JsonPath(getResponse);
+		JsonPath js1 = ReusableMethods.rawToJson(getResponse);
 		// extracting 'address' data from the response
-		String updatedAddress = js1.getString("address");
-		System.out.println(updatedAddress);
-
+		String responseAddress = js1.getString("address");
+		System.out.println(responseAddress);
+		//TestNg assertion to validate the address is updated or not
+		Assert.assertEquals(newAddress, responseAddress);
 	}
 }
