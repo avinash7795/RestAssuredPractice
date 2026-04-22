@@ -15,8 +15,7 @@ public class GoogleMapsApiTesting {
 		 */
 		// storing base uri
 		RestAssured.baseURI = "https://rahulshettyacademy.com";
-		// giving input, submitting and asserting the status code and extracting the
-		// response
+		// giving input, submitting and asserting the status code and extracting the response
 		String response = given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
 				.body(Payload.addPlace()) // got payload from helper class method
 				.when().post("/maps/api/place/add/json").then().log().all().assertThat().statusCode(200)
@@ -28,12 +27,25 @@ public class GoogleMapsApiTesting {
 		// extracting place id from json response body
 		String placeId = js.getString("place_id");
 		System.out.println(placeId);
- 
-		//updating the address of the place and asserting the success message, status code 
+
+		// storing new address in a variable
+		String newAddress = "70 winter walk, USA";
+		// updating the address of the place and asserting the success message, status code
 		given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
-				.body("{\r\n" + "\"place_id\":\"" + placeId + "\",\r\n" + "\"address\":\"70 winter walk, USA\",\r\n"
+				.body("{\r\n" + "\"place_id\":\"" + placeId + "\",\r\n" + "\"address\":\"" + newAddress + "\",\r\n"
 						+ "\"key\":\"qaclick123\"\r\n" + "}")
 				.when().put("maps/api/place/update/json").then().log().all().assertThat().statusCode(200)
 				.body("msg", equalTo("Address successfully updated"));
+
+		// getting response as string by fetching GET api using place id
+		String getResponse = given().log().all().queryParam("key", "qaclick123").queryParam("place_id", placeId).when()
+				.get("maps/api/place/get/json").then().log().all().assertThat().statusCode(200).extract().response()
+				.asString();
+		// parsing string into json format
+		JsonPath js1 = new JsonPath(getResponse);
+		// extracting 'address' data from the response
+		String updatedAddress = js1.getString("address");
+		System.out.println(updatedAddress);
+
 	}
 }
